@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.network :private_network, ip: "192.168.33.10"
   # config.vm.network :public_network
-  # config.vm.synced_folder "~/Projects", "/vagrant"
+  config.vm.synced_folder "~/projects/node", "/vagrant"
   config.vm.provider :virtualbox do |vb|
     vb.customize [
       "modifyvm", :id,

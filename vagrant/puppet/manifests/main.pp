@@ -30,6 +30,23 @@ class othertools {
         ensure => present,
         require => Exec["aptGetUpdate"]
     }
+
+    include apt
+    apt::ppa {
+    'ppa:fish-shell/release-2': notify => Package["fish"]
+    }
+
+    package { "fish":
+        ensure => present,
+        require => Exec["aptGetUpdate"]
+    }
+
+    user { "vagrant":
+      ensure => present,
+      shell  => "/usr/bin/fish", # or "/usr/bin/zsh" depending on guest OS (check it by running `which zsh`)
+      require => Package['fish']
+    }
+
 }
 
 class node-js {
@@ -52,6 +69,12 @@ class node-js {
   }
 }
 
+class { '::mysql::server':
+  root_password    => 'devpass',
+  override_options => { 'mysqld' => { 'max_connections' => '1024' } }
+}
+
 include apt_update
 include othertools
 include node-js
+include '::mysql::server'
